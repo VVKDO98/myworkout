@@ -6,7 +6,7 @@
   
     async function getWorkouts() {
       try {
-        const res = await fetch('/api/get');
+        const res = await fetch('/api/getpull');
         if (!res.ok) {
           throw new Error("Erreur lors de la récupération des workouts");
         }
@@ -40,11 +40,8 @@
         <p>Séries : {workout.series}</p>
         <p>Répétitions : {workout.reps}</p>
         <p>Poids : {workout.weights}</p>
-        <a href="/update/{workout.id}">Modifier</a>
       </div>
     {/each}
     {:else}
     <p>Aucun workout trouvé.</p>
   {/if}
-  
-  
