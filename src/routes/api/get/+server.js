@@ -1,16 +1,17 @@
 import { json } from "@sveltejs/kit";
-import Database from "better-sqlite3";
+import { createClient } from "@libsql/client";
 
-export function GET() {
-  const db = Database("workout.db");
+const db = createClient({
+  url: process.env.TURSO_DATABASE_URL, // Définie dans Vercel ou .env
+  authToken: process.env.TURSO_AUTH_TOKEN, // Si nécessaire
+});
 
-  return json(
-    db
-      .prepare(
-        `
-    SELECT * FROM workout
-    `
-      )
-      .all()
-  );
+export async function GET() {
+  try {
+    const { rows } = await db.execute("SELECT * FROM workout");
+    return json(rows);
+  } catch (error) {
+    console.error("Erreur API:", error);
+    return json({ success: false, message: "Erreur serveur" }, { status: 500 });
+  }
 }
